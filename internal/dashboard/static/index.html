@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEGIS Shield — Portable DNS Ad Blocker</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="shield-icon" id="shieldIcon">🛡️</div>
+        <div>
+          <h1>AEGIS SHIELD <span class="badge-version">v1.0 Portable</span></h1>
+          <p class="subtitle">Zero-Install Hardware-Bound DNS Ad & Tracker Blocker</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="status-indicator" id="statusBadge">
+          <span class="dot"></span>
+          <span id="statusText">SHIELD ACTIVE</span>
+        </div>
+        <button class="btn btn-secondary" onclick="openFlushDNS()">🧹 Flush DNS</button>
+        <button class="btn btn-danger" onclick="confirmQuit()">🔌 Restore & Quit</button>
+      </div>
+    </header>
+
+    <!-- Pause Banner (Hidden by default) -->
+    <div id="pauseBanner" class="pause-banner" style="display: none;">
+      ⚠️ Protection is currently <strong>PAUSED</strong> (<span id="pauseCountdown">0:00</span> remaining).
+      <button class="btn btn-sm btn-primary" onclick="resumeShield()">Resume Now</button>
+    </div>
+
+    <!-- Metrics Grid -->
+    <div class="grid grid-4">
+      <div class="card stat-card">
+        <div class="stat-label">Block Rate</div>
+        <div class="stat-value text-emerald" id="blockRate">0.0%</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="blockRateBar" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="card stat-card">
+        <div class="stat-label">Blocked Threats & Ads</div>
+        <div class="stat-value text-red" id="blockedQueries">0</div>
+        <div class="stat-sub" id="blockedSub">0 dropped packets</div>
+      </div>
+
+      <div class="card stat-card">
+        <div class="stat-label">Total DNS Queries</div>
+        <div class="stat-value text-blue" id="totalQueries">0</div>
+        <div class="stat-sub" id="totalSub">Processed locally on 127.0.0.1</div>
+      </div>
+
+      <div class="card stat-card">
+        <div class="stat-label">Active Block Rules</div>
+        <div class="stat-value text-purple" id="rulesCount">76,104</div>
+        <div class="stat-sub">StevenBlack Unified Hosts</div>
+      </div>
+    </div>
+
+    <!-- Quick Control Bar -->
+    <div class="card control-bar">
+      <div class="control-group">
+        <span class="control-title">Temporary Bypass:</span>
+        <button class="btn btn-secondary btn-sm" onclick="pauseShield(5)">Pause 5m</button>
+        <button class="btn btn-secondary btn-sm" onclick="pauseShield(15)">Pause 15m</button>
+        <button class="btn btn-secondary btn-sm" onclick="pauseShield(60)">Pause 1h</button>
+      </div>
+      <div class="control-group">
+        <input type="text" id="customDomainInput" placeholder="domain.com (e.g. tracking.site)" class="input-text">
+        <button class="btn btn-secondary btn-sm" onclick="addCustomRule('blacklist')">+ Block</button>
+        <button class="btn btn-outline btn-sm" onclick="addCustomRule('whitelist')">+ Allow</button>
+      </div>
+    </div>
+
+    <!-- Content Split: Live Feed & Top Blocked -->
+    <div class="grid grid-3-1">
+      <!-- Live Queries Feed -->
+      <div class="card">
+        <div class="card-header">
+          <h2>⚡ Real-Time Query Stream</h2>
+          <div class="live-toggle">
+            <span class="live-dot"></span> Live Feed
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="query-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Type</th>
+                <th>Domain</th>
+                <th>Action</th>
+                <th>Latency</th>
+              </tr>
+            </thead>
+            <tbody id="queryTableBody">
+              <tr>
+                <td colspan="5" class="text-center text-muted">Listening for DNS queries on 127.0.0.1:53...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Top Blocked & Adapter Info -->
+      <div class="side-column">
+        <div class="card">
+          <div class="card-header">
+            <h2>🚫 Top Blocked Trackers</h2>
+          </div>
+          <div id="topBlockedList" class="top-list">
+            <div class="text-muted text-center py-4">No blocked domains yet</div>
+          </div>
+        </div>
+
+        <div class="card mt-4">
+          <div class="card-header">
+            <h2>🌐 Bound Interfaces</h2>
+          </div>
+          <div id="interfacesList" class="interface-list">
+            <div class="text-muted">Detecting adapters...</div>
+          </div>
+        </div>
+
+        <div class="card mt-4 privacy-card">
+          <div class="privacy-title">🔒 100% Privacy Enforced</div>
+          <p class="privacy-text">
+            All queries are filtered purely in volatile RAM. No logs leave your computer. Upstream traffic is routed to Cloudflare (1.1.1.1) and Google (8.8.8.8) with zero middleman inspection.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div>AEGIS Shield — Portable Edition | Owner: <strong>Pongsakorn</strong> | Tech Lead: <strong>(AI)</strong></div>
+      <div id="uptimeDisplay">Uptime: 0s</div>
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
